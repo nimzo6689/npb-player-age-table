@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="プロ野球のチーム別年齢構成表" />
+    <title>プロ野球のチーム別年齢構成表</title>
+
+    <style>[v-cloak] { display: none; }</style>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
+      integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app" v-cloak>
+      <div class="header">
+        <h1>プロ野球のチーム別年齢構成表</h1>
+        <h2>2023年レギュラーシーズン終了時点のデータを元に算出</h2>
+      </div>
+
+      <div class="content">
+        <form class="pure-form pure-form-stacked">
+          <fieldset>
+            <label for="team-name">チーム</label>
+            <select id="team-name" v-model="team">
+              <option value="">チームを選択</option>
+              <optgroup label="セ・リーグ">
+                <option value="tigers">阪神タイガース</option>
+                <option value="carp">広島東洋カープ</option>
+                <option value="baystars">横浜DeNAベイスターズ</option>
+                <option value="giants">読売ジャイアンツ</option>
+                <option value="swallows">東京ヤクルトスワローズ</option>
+                <option value="dragons">中日ドラゴンズ</option>
+              </optgroup>
+              <optgroup label="パ・リーグ">
+                <option value="buffaloes">オリックス・バファローズ</option>
+                <option value="marines">千葉ロッテマリーンズ</option>
+                <option value="hawks">福岡ソフトバンクホークス</option>
+                <option value="eagles">東北楽天ゴールデンイーグルス</option>
+                <option value="lions">埼玉西武ライオンズ</option>
+                <option value="fighters">北海道日本ハムファイターズ</option>
+              </optgroup>
+            </select>
+          </fieldset>
+        </form>
+        <table class="pure-table" v-show="team">
+          <thead>
+            <tr>
+              <th>年齢</th>
+              <th>投手（先発）</th>
+              <th>投手（リリーフ）</th>
+              <th>投手（未分類）</th>
+              <th>捕手</th>
+              <th>内野手</th>
+              <th>外野手</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="record in records" :key="record.age">
+              <td>{{record.age}}</td>
+              <td>
+                <div class="player-cell" v-for="player in record.starters">
+                  <span class="player-useful" v-if="player.isUseful">{{player.name}}</span>
+                  <span class="player-used" v-else-if="player.isUsed">{{player.name}}</span>
+                  <span v-else>{{player.name}}</span>
+                </div>
+              </td>
+              <td>
+                <div class="player-cell" v-for="player in record.reliefs">
+                  <span class="player-useful" v-if="player.isUseful">{{player.name}}</span>
+                  <span class="player-used" v-else-if="player.isUsed">{{player.name}}</span>
+                  <span v-else>{{player.name}}</span>
+                </div>
+              </td>
+              <td>
+                <div class="player-cell" v-for="player in record.others">
+                  <span class="player-useful" v-if="player.isUseful">{{player.name}}</span>
+                  <span class="player-used" v-else-if="player.isUsed">{{player.name}}</span>
+                  <span v-else>{{player.name}}</span>
+                </div>
+              </td>
+              <td>
+                <div class="player-cell" v-for="player in record.catchers">
+                  <span class="player-useful" v-if="player.isUseful">{{player.name}}</span>
+                  <span class="player-used" v-else-if="player.isUsed">{{player.name}}</span>
+                  <span v-else>{{player.name}}</span>
+                </div>
+              </td>
+              <td>
+                <div class="player-cell" v-for="player in record.infielders">
+                  <span class="player-useful" v-if="player.isUseful">{{player.name}}</span>
+                  <span class="player-used" v-else-if="player.isUsed">{{player.name}}</span>
+                  <span v-else>{{player.name}}</span>
+                </div>
+              </td>
+              <td>
+                <div class="player-cell" v-for="player in record.outfielders">
+                  <span class="player-useful" v-if="player.isUseful">{{player.name}}</span>
+                  <span class="player-used" v-else-if="player.isUsed">{{player.name}}</span>
+                  <span v-else>{{player.name}}</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          ※ 年齢は2024年4月1日の満年齢。<br />
+          ※ 育成選手は () で表記。<br />
+          ※
+          <span class="player-used">太字選手</span
+          >は、当該チームで2023年度のシーズンで15戦以上先発投手、40戦以上登板投手、100戦以上出場野手。<br />
+          ※ <span class="player-useful">赤字選手</span>は、防御率 3.00 未満、または、OPS .750 以上の選手。
+        </p>
+      </div>
+    </div>
+  </body>
+  <script type="module" src="app.js"></script>
+</html>
