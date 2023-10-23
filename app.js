@@ -125,7 +125,7 @@ createApp({
   },
   methods: {
     async fetchData() {
-      const res = await fetch(`http://127.0.0.1:5500/players/${this.team}.json`);
+      const res = await fetch(`players/${this.team}.json`);
       this.players = await res.json();
     },
   },
